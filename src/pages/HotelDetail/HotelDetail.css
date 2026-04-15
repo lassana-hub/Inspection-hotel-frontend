@@ -1,0 +1,588 @@
+.hotel-detail { display: flex; flex-direction: column; gap: 20px; }
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+}
+.breadcrumb a { color: var(--navy-light); transition: var(--transition); }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span:last-child { color: var(--text); font-weight: 500; }
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.detail-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.detail-badge {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.stat-lbl {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Tabs */
+.tabs-bar {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.tab-btn:hover { color: var(--navy); }
+.tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* Tab content */
+.tab-content {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-count {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Table list */
+.list-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.list-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--bg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-items: center;
+}
+
+.list-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  padding: 12px 16px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  font-size: 0.92rem;
+  transition: background 0.15s;
+}
+
+.list-row:hover { background: #f8fafc; }
+
+.room-number, .valet-name { font-weight: 600; color: var(--text); }
+
+/* ─── Cartes valets ──────────────────────────────────────────────── */
+.valets-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.valet-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  transition: var(--transition);
+}
+
+.valet-card:hover {
+  border-color: var(--navy-light);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.valet-card-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.valet-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.valet-card-name {
+  font-weight: 700;
+  font-size: 0.97rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.valet-card-phone {
+  font-size: 0.85rem;
+  color: var(--navy-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.valet-card-phone:hover { text-decoration: underline; color: var(--navy); }
+
+.valet-card-no-phone {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.valet-card-contract {
+  font-size: 0.82rem;
+  color: var(--navy-light);
+  font-weight: 600;
+}
+
+.valet-card-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.badge-t1 { background: #ebf4ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+.badge-t2 { background: #faf5ff; color: #6b46c1; border: 1px solid #e9d8fd; }
+
+/* Info grid */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item { display: flex; flex-direction: column; gap: 4px; }
+
+.info-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value { font-size: 1rem; color: var(--text); font-weight: 500; }
+
+/* Plannings */
+.planning-list { display: flex; flex-direction: column; gap: 10px; }
+
+.planning-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.planning-info { display: flex; flex-direction: column; gap: 3px; }
+
+.planning-week { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+
+.planning-days { font-size: 0.82rem; color: var(--text-light); }
+
+.planning-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ─── Chambres lecture seule ─────────────────────────────────────── */
+.rooms-readonly-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.room-readonly-card {
+  border-radius: var(--radius);
+  border: 2px solid;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.room-readonly-card.t1    { border-color: #bee3f8; background: #ebf4ff; }
+.room-readonly-card.t2    { border-color: #e9d8fd; background: #faf5ff; }
+.room-readonly-card.total { border-color: var(--gold); background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+
+.room-ro-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.t1 .room-ro-badge    { background: #2b6cb0; color: #fff; }
+.t2 .room-ro-badge    { background: #6b46c1; color: #fff; }
+.total .room-ro-badge { background: var(--gold); color: var(--navy); }
+
+.room-ro-value {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.t1 .room-ro-value, .t2 .room-ro-value { color: var(--navy); }
+.total .room-ro-value { color: var(--gold-light); }
+
+.room-ro-label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.t1 .room-ro-label, .t2 .room-ro-label { color: var(--text-light); }
+.total .room-ro-label { color: rgba(255,255,255,0.7); }
+
+/* Durées table */
+.durees-section { margin-bottom: 20px; }
+
+.durees-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.durees-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.durees-head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 8px 16px;
+  background: var(--bg);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-light);
+  letter-spacing: 0.4px;
+  gap: 8px;
+}
+
+.durees-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 10px 16px;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  border-left: 3px solid transparent;
+}
+
+.durees-row.color-red   { border-left-color: var(--danger);  background: #fff5f5; }
+.durees-row.color-blue  { border-left-color: #4299e1; background: #ebf4ff; }
+.durees-row.color-green { border-left-color: var(--success); background: #f0fff4; }
+
+.duree-type { font-weight: 600; color: var(--text); }
+.duree-val  { font-weight: 700; color: var(--navy); }
+
+.rooms-edit-hint {
+  font-size: 0.83rem;
+  color: var(--text-light);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+/* ─── Compteurs de chambres (anciens styles devenus inutiles) ────── */
+.rooms-counters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.room-counter-card {
+  border-radius: var(--radius);
+  border: 2px solid;
+  overflow: hidden;
+}
+
+.room-counter-card.t1 { border-color: #bee3f8; }
+.room-counter-card.t2 { border-color: #e9d8fd; }
+
+.room-counter-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+.room-counter-card.t1 .room-counter-header { background: #ebf4ff; }
+.room-counter-card.t2 .room-counter-header { background: #faf5ff; }
+
+.room-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.room-counter-card.t1 .room-counter-badge { background: #2b6cb0; color: #fff; }
+.room-counter-card.t2 .room-counter-badge { background: #6b46c1; color: #fff; }
+
+.room-counter-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.room-counter-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 18px;
+  background: var(--white);
+}
+
+.counter-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--white);
+}
+
+.counter-btn.minus { border-color: var(--danger); color: var(--danger); }
+.counter-btn.minus:hover:not(:disabled) { background: var(--danger); color: var(--white); }
+
+.counter-btn.plus { border-color: var(--success); color: var(--success); }
+.counter-btn.plus:hover:not(:disabled) { background: var(--success); color: var(--white); }
+
+.counter-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.counter-value {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--navy);
+  min-width: 64px;
+  text-align: center;
+  line-height: 1;
+}
+
+.room-counter-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.room-counter-footer span {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.room-total-card {
+  border-radius: var(--radius);
+  border: 2px solid var(--gold);
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  gap: 4px;
+  text-align: center;
+}
+
+.room-total-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.room-total-value {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.room-total-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+}
+
+/* Form shared */
+.form-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
+
+.empty-state-sm {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 480px) {
+  .stats-row { grid-template-columns: repeat(5, 1fr); }
+}
+
+@media (min-width: 560px) {
+  .valets-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .valets-cards { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 600px) {
+  .rooms-counters { grid-template-columns: 1fr 1fr; }
+  .room-total-card { grid-column: span 2; flex-direction: row; gap: 16px; }
+}
+
+@media (min-width: 900px) {
+  .rooms-counters { grid-template-columns: 1fr 1fr 200px; }
+  .room-total-card { grid-column: auto; flex-direction: column; }
+}
+
+@media (min-width: 768px) {
+  .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+}

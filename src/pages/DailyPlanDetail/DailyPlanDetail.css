@@ -1,0 +1,209 @@
+.daily-detail { display: flex; flex-direction: column; gap: 24px; }
+
+.daily-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.daily-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* 2-col grid */
+.daily-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.daily-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.daily-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.daily-card-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.total-min {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+  background: var(--white);
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+/* Rooms list */
+.rooms-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.room-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid;
+}
+
+.room-item.color-red { background: #fff5f5; border-color: var(--danger); }
+.room-item.color-blue { background: #ebf4ff; border-color: #4299e1; }
+.room-item.color-green { background: #f0fff4; border-color: var(--success); }
+
+.room-item-left { display: flex; align-items: center; gap: 10px; }
+
+.room-icon { font-size: 1.2rem; }
+
+.room-label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); }
+
+.room-time { display: block; font-size: 0.75rem; color: var(--text-light); margin-top: 1px; }
+
+.room-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+
+.room-qty { font-size: 1.4rem; font-weight: 800; color: var(--navy); line-height: 1; }
+
+.room-subtotal { font-size: 0.78rem; color: var(--text-light); }
+
+/* Valets */
+.valets-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+.empty-valets {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.valet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  transition: var(--transition);
+}
+
+.valet-item.absent {
+  opacity: 0.55;
+  background: #f7fafc;
+  border-style: dashed;
+}
+
+.valet-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.valet-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+
+.valet-fullname { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+
+.valet-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.status-select-daily {
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.hours-select {
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.hours-select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Form */
+.form-section-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rooms-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--navy-light); transition: var(--transition); }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span:last-child { color: var(--text); font-weight: 500; }
+
+/* Shared btn (re-declared here for scoping) */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; white-space: nowrap; }
+.btn-primary { background: var(--navy); color: var(--white); }
+.btn-primary:hover { background: var(--navy-light); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: var(--gold); color: var(--white); }
+.btn-secondary:hover { background: var(--gold-light); color: var(--navy); }
+.btn-ghost { background: transparent; color: var(--text-light); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg); color: var(--text); }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #fed7d7; }
+.btn-danger:hover { background: var(--danger); color: var(--white); }
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+.btn-xs { padding: 4px 10px; font-size: 0.8rem; }
+.form { display: flex; flex-direction: column; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.form-input, .form-select { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text); background: var(--white); transition: var(--transition); width: 100%; }
+.form-input:focus, .form-select:focus { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(42,82,152,0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+.page-title { font-size: 1.5rem; font-weight: 800; color: var(--navy); }
+
+@media (min-width: 768px) {
+  .daily-grid { grid-template-columns: 1fr 1fr; }
+  .page-title { font-size: 1.75rem; }
+}
