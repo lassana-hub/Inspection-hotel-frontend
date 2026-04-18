@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
+import { useAuth } from '../../context/AuthContext'
 import Spinner from '../../components/Spinner/Spinner'
 import Modal from '../../components/Modal/Modal'
 import HotelForm, { DEFAULT_FORM } from '../../components/HotelForm/HotelForm'
 import './Dashboard.css'
 
 export default function Dashboard() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
+
   const [hotels, setHotels] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -19,7 +23,12 @@ export default function Dashboard() {
     try {
       setLoading(true)
       const { data } = await api.get('/hotels')
-      setHotels(data)
+      // Le gouvernant ne voit que son hôtel
+      if (!isAdmin && user?.hotel?._id) {
+        setHotels(data.filter((h) => h._id === user.hotel._id))
+      } else {
+        setHotels(data)
+      }
     } catch {
       setError('Impossible de charger les hôtels.')
     } finally {
@@ -65,16 +74,22 @@ export default function Dashboard() {
           <h1 className="page-title">Tableau de bord</h1>
           <p className="page-subtitle">{hotels.length} hôtel{hotels.length > 1 ? 's' : ''} enregistré{hotels.length > 1 ? 's' : ''}</p>
         </div>
-        <button className="btn btn-primary" onClick={() => { setForm(DEFAULT_FORM); setShowModal(true) }}>
-          + Nouvel hôtel
-        </button>
+        {isAdmin && (
+          <button className="btn btn-primary" onClick={() => { setForm(DEFAULT_FORM); setShowModal(true) }}>
+            + Nouvel hôtel
+          </button>
+        )}
       </div>
 
       {hotels.length === 0 ? (
         <div className="empty-state">
           <span className="empty-icon">🏨</span>
           <p>Aucun hôtel enregistré.</p>
-          <button className="btn btn-primary" onClick={() => { setForm(DEFAULT_FORM); setShowModal(true) }}>Ajouter un hôtel</button>
+          {isAdmin && (
+            <button className="btn btn-primary" onClick={() => { setForm(DEFAULT_FORM); setShowModal(true) }}>
+              Ajouter un hôtel
+            </button>
+          )}
         </div>
       ) : (
         <div className="hotels-grid">
@@ -91,9 +106,11 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-              <div className="hotel-card-actions">
-                <button className="btn btn-ghost btn-sm" onClick={(e) => handleDelete(hotel._id, hotel.name, e)}>🗑</button>
-              </div>
+              {isAdmin && (
+                <div className="hotel-card-actions">
+                  <button className="btn btn-ghost btn-sm" onClick={(e) => handleDelete(hotel._id, hotel.name, e)}>🗑</button>
+                </div>
+              )}
             </div>
           ))}
         </div>

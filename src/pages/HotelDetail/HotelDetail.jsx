@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from '../../api/axios'
+import { useAuth } from '../../context/AuthContext'
 import Spinner from '../../components/Spinner/Spinner'
 import Modal from '../../components/Modal/Modal'
 import HotelForm, { DEFAULT_FORM } from '../../components/HotelForm/HotelForm'
 import './HotelDetail.css'
 
-const TABS = ['Informations', 'Durées de nettoyage', 'Valets', 'Plannings']
+const TABS_BASE = ['Informations', 'Durées de nettoyage', 'Valets', 'Plannings']
 
 const ALL_activeRoomTypes = ['T1', 'T2', 'T3', 'T4', 'T5']
 
@@ -19,9 +20,16 @@ const DUREE_ROWS = [
 export default function HotelDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
+  const TABS = isAdmin
+    ? ['Informations', 'Durées de nettoyage', 'Valets', 'Gouvernants', 'Plannings']
+    : TABS_BASE
+
   const [activeTab, setActiveTab] = useState('Informations')
   const [hotel, setHotel] = useState(null)
   const [plannings, setPlannings] = useState([])
+  const [gouvernants, setGouvernants] = useState([])
   const [loading, setLoading] = useState(true)
 
   // Modals
@@ -30,10 +38,15 @@ export default function HotelDetail() {
   const [editValetModal, setEditValetModal] = useState(false)
   const [editingValet, setEditingValet] = useState(null)
   const [planningModal, setPlanningModal] = useState(false)
+  const [gouvernantModal, setGouvernantModal] = useState(false)
+  const [editGouvernantModal, setEditGouvernantModal] = useState(false)
+  const [editingGouvernant, setEditingGouvernant] = useState(null)
 
   const [editForm, setEditForm] = useState(DEFAULT_FORM)
   const [valetForm, setValetForm] = useState({ firstName: '', lastName: '', phone: '', workHours: 5 })
   const [planningForm, setPlanningForm] = useState({ weekStartDate: '', gouvernantNom: '' })
+  const [gouvernantForm, setGouvernantForm] = useState({ username: '', email: '', password: '' })
+  const [editGouvernantForm, setEditGouvernantForm] = useState({ username: '', email: '', password: '' })
   const [saving, setSaving] = useState(false)
 
   const fetchHotel = useCallback(async () => {
@@ -101,7 +114,7 @@ export default function HotelDetail() {
       setValetModal(false)
       setValetForm({ firstName: '', lastName: '', phone: '', workHours: 5 })
       fetchHotel()
-    } catch { alert('Erreur lors de l\'ajout.') }
+    } catch { alert("Erreur lors de l'ajout.") }
     finally { setSaving(false) }
   }
 
@@ -150,12 +163,68 @@ export default function HotelDetail() {
     fetchHotel()
   }
 
+  // --- Gouvernants (admin seulement) ---
+  const fetchGouvernants = useCallback(async () => {
+    if (!isAdmin) return
+    try {
+      const { data } = await api.get(`/auth/gouvernants?hotelId=${id}`)
+      setGouvernants(data)
+    } catch { /* silencieux */ }
+  }, [id, isAdmin])
+
+  useEffect(() => {
+    if (activeTab === 'Gouvernants') fetchGouvernants()
+  }, [activeTab, fetchGouvernants])
+
+  const openEditGouvernant = (g) => {
+    setEditingGouvernant(g)
+    setEditGouvernantForm({ username: g.username, email: g.email, password: '' })
+    setEditGouvernantModal(true)
+  }
+
+  const saveGouvernant = async (e) => {
+    e.preventDefault()
+    try {
+      setSaving(true)
+      const payload = { username: editGouvernantForm.username, email: editGouvernantForm.email }
+      if (editGouvernantForm.password) payload.password = editGouvernantForm.password
+      await api.put(`/auth/gouvernants/${editingGouvernant._id}`, payload)
+      setEditGouvernantModal(false)
+      setEditingGouvernant(null)
+      fetchGouvernants()
+    } catch (err) {
+      alert(err.response?.data?.error || 'Erreur lors de la modification.')
+    } finally { setSaving(false) }
+  }
+
+  const removeGouvernant = async (gId, username) => {
+    if (!confirm(`Supprimer le compte de "${username}" ? Cette action est irréversible.`)) return
+    try {
+      await api.delete(`/auth/gouvernants/${gId}`)
+      fetchGouvernants()
+    } catch { alert('Erreur lors de la suppression.') }
+  }
+
+  // --- Créer un gouvernant (admin seulement) ---
+  const createGouvernant = async (e) => {
+    e.preventDefault()
+    try {
+      setSaving(true)
+      await api.post('/auth/gouvernants', { ...gouvernantForm, hotelId: id })
+      setGouvernantModal(false)
+      setGouvernantForm({ username: '', email: '', password: '' })
+      alert('Compte gouvernant créé avec succès.')
+    } catch (err) {
+      alert(err.response?.data?.error || 'Erreur lors de la création.')
+    } finally { setSaving(false) }
+  }
+
   const formatDate = (d) =>
     new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
 
   const nextMonday = () => {
     const d = new Date()
-    const day = d.getDay() // 0=Sun, 1=Mon, ...
+    const day = d.getDay()
     const diff = day === 1 ? 0 : day === 0 ? 1 : 8 - day
     d.setDate(d.getDate() + diff)
     return d.toISOString().split('T')[0]
@@ -186,7 +255,18 @@ export default function HotelDetail() {
             {hotel.address && <p className="page-subtitle">📍 {hotel.address}</p>}
           </div>
         </div>
-        <button className="btn btn-ghost btn-sm" onClick={openEditHotel}>✏️ Modifier</button>
+        <div className="detail-header-actions">
+          {isAdmin && (
+            <>
+              <button className="btn btn-ghost btn-sm" onClick={() => setGouvernantModal(true)}>
+                👤 Créer un gouvernant
+              </button>
+              <button className="btn btn-ghost btn-sm" onClick={openEditHotel}>
+                ✏️ Modifier
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -259,7 +339,9 @@ export default function HotelDetail() {
               ))}
             </div>
           </div>
-          <p className="rooms-edit-hint">💡 Pour modifier ces informations, cliquez sur <strong>✏️ Modifier</strong> en haut de la page.</p>
+          {isAdmin && (
+            <p className="rooms-edit-hint">💡 Pour modifier ces informations, cliquez sur <strong>✏️ Modifier</strong> en haut de la page.</p>
+          )}
         </div>
       )}
 
@@ -288,6 +370,37 @@ export default function HotelDetail() {
                   <div className="valet-card-actions">
                     <button className="btn btn-ghost btn-xs" onClick={() => openEditValet(v)}>✏️</button>
                     <button className="btn btn-danger btn-xs" onClick={() => deleteValet(v._id)}>🗑</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Tab: Gouvernants (admin seulement) ── */}
+      {activeTab === 'Gouvernants' && isAdmin && (
+        <div className="tab-content">
+          <div className="tab-toolbar">
+            <p className="tab-count">{gouvernants.length} gouvernant{gouvernants.length > 1 ? 's' : ''}</p>
+            <button className="btn btn-primary btn-sm" onClick={() => { setGouvernantForm({ username: '', email: '', password: '' }); setGouvernantModal(true) }}>
+              + Ajouter
+            </button>
+          </div>
+          {gouvernants.length === 0 ? (
+            <div className="empty-state-sm">Aucun gouvernant assigné à cet hôtel.</div>
+          ) : (
+            <div className="valets-cards">
+              {gouvernants.map((g) => (
+                <div key={g._id} className="valet-card">
+                  <div className="valet-card-avatar">{g.username.charAt(0).toUpperCase()}</div>
+                  <div className="valet-card-info">
+                    <span className="valet-card-name">{g.username}</span>
+                    <span className="valet-card-phone">{g.email}</span>
+                  </div>
+                  <div className="valet-card-actions">
+                    <button className="btn btn-ghost btn-xs" onClick={() => openEditGouvernant(g)}>✏️</button>
+                    <button className="btn btn-danger btn-xs" onClick={() => removeGouvernant(g._id, g.username)}>🗑</button>
                   </div>
                 </div>
               ))}
@@ -326,8 +439,8 @@ export default function HotelDetail() {
         </div>
       )}
 
-      {/* Modal modifier hôtel */}
-      {editHotelModal && (
+      {/* Modal modifier hôtel (admin seulement) */}
+      {editHotelModal && isAdmin && (
         <Modal title={`Modifier — ${hotel.name}`} onClose={() => setEditHotelModal(false)}>
           <HotelForm
             form={editForm}
@@ -337,6 +450,97 @@ export default function HotelDetail() {
             saving={saving}
             submitLabel="Enregistrer"
           />
+        </Modal>
+      )}
+
+      {/* Modal créer gouvernant (admin seulement) */}
+      {gouvernantModal && isAdmin && (
+        <Modal title={`Créer un gouvernant — ${hotel.name}`} onClose={() => setGouvernantModal(false)}>
+          <form className="form" onSubmit={createGouvernant}>
+            <div className="form-group">
+              <label className="form-label">Nom d'utilisateur *</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="ex : marie.dupont"
+                value={gouvernantForm.username}
+                onChange={(e) => setGouvernantForm({ ...gouvernantForm, username: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email *</label>
+              <input
+                className="form-input"
+                type="email"
+                placeholder="marie@hotel.com"
+                value={gouvernantForm.email}
+                onChange={(e) => setGouvernantForm({ ...gouvernantForm, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Mot de passe *</label>
+              <input
+                className="form-input"
+                type="password"
+                placeholder="6 caractères minimum"
+                value={gouvernantForm.password}
+                onChange={(e) => setGouvernantForm({ ...gouvernantForm, password: e.target.value })}
+                required
+                minLength={6}
+              />
+            </div>
+            <div className="form-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setGouvernantModal(false)}>Annuler</button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>
+                {saving ? 'Création...' : 'Créer le compte'}
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* Modal modifier gouvernant (admin seulement) */}
+      {editGouvernantModal && editingGouvernant && (
+        <Modal title={`Modifier — ${editingGouvernant.username}`} onClose={() => { setEditGouvernantModal(false); setEditingGouvernant(null) }}>
+          <form className="form" onSubmit={saveGouvernant}>
+            <div className="form-group">
+              <label className="form-label">Nom d'utilisateur *</label>
+              <input
+                className="form-input"
+                type="text"
+                value={editGouvernantForm.username}
+                onChange={(e) => setEditGouvernantForm({ ...editGouvernantForm, username: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email *</label>
+              <input
+                className="form-input"
+                type="email"
+                value={editGouvernantForm.email}
+                onChange={(e) => setEditGouvernantForm({ ...editGouvernantForm, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Nouveau mot de passe <span className="form-hint">(laisser vide pour ne pas changer)</span></label>
+              <input
+                className="form-input"
+                type="password"
+                placeholder="6 caractères minimum"
+                value={editGouvernantForm.password}
+                onChange={(e) => setEditGouvernantForm({ ...editGouvernantForm, password: e.target.value })}
+                minLength={6}
+              />
+            </div>
+            <div className="form-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => { setEditGouvernantModal(false); setEditingGouvernant(null) }}>Annuler</button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Enregistrement...' : 'Enregistrer'}</button>
+            </div>
+          </form>
         </Modal>
       )}
 

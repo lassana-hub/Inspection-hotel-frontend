@@ -130,21 +130,60 @@
   outline: none;
 }
 
-/* Split cells (T1 + T2) */
-.cell-split { cursor: pointer; }
-.cell-total-split { font-size: 0.8rem; line-height: 1.4; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px; }
-.split-sub { font-size: 0.65rem; color: var(--text-light); font-weight: 500; }
+/* Split cells — édition indépendante par type */
+.cell-split { cursor: default; padding: 3px 2px !important; }
 
-.cell-split-inputs {
+.cell-split-view {
   display: flex;
-  align-items: center;
-  gap: 2px;
-  justify-content: center;
-  padding: 2px;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 4px;
 }
 
-.cell-split-inputs .cell-input { width: 38px; }
-.cell-split-sep { font-size: 0.75rem; color: var(--text-light); }
+.cell-type-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.12s;
+  min-width: 56px;
+}
+
+.cell-type-row:hover { background: #e8f0fe; }
+
+.cell-type-row.editing {
+  background: #f0f4ff;
+  cursor: default;
+}
+
+.type-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-light);
+  letter-spacing: 0.3px;
+  min-width: 16px;
+}
+
+.type-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.type-input {
+  width: 42px;
+  padding: 2px 4px;
+  border: 2px solid var(--navy-light);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  background: #fff;
+}
 
 /* Status cells */
 .cell-status { padding: 5px 4px; }

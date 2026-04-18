@@ -145,8 +145,8 @@ export default function PlanningDetail() {
     }
   };
 
-  const startEdit = (row, colIdx, currentVal) => {
-    setEditingCell({ row, colIdx });
+  const startEdit = (row, colIdx, currentVal, typeIdx = null) => {
+    setEditingCell({ row, colIdx, typeIdx });
     setCellValue(String(currentVal));
   };
 
@@ -420,58 +420,49 @@ export default function PlanningDetail() {
                   {weekDates.map((d, i) => {
                     const dateKey = fmtDateKey(d);
                     const vals = fields.map((f) => getDayValue(dateKey, f));
-                    const isEditing = editingCell?.row === row && editingCell?.colIdx === i;
                     return (
-                      <td
-                        key={i}
-                        className="cell-number cell-split"
-                        onClick={() => !isEditing && setEditingCell({ row, colIdx: i })}
-                      >
-                        {isEditing ? (
-                          <div className="cell-split-inputs">
-                            {fields.map((f, fi) => {
-                              const tLabel = activeRoomTypes[fi];
-                              const isLast = fi === fields.length - 1;
-                              return (
-                                <span key={f} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <td key={i} className="cell-number cell-split">
+                        <div className="cell-split-view">
+                          {fields.map((f, fi) => {
+                            const isThisEditing =
+                              editingCell?.row === row &&
+                              editingCell?.colIdx === i &&
+                              editingCell?.typeIdx === fi;
+                            return (
+                              <div
+                                key={f}
+                                className={`cell-type-row${isThisEditing ? " editing" : ""}`}
+                                onClick={() => !isThisEditing && startEdit(row, i, vals[fi], fi)}
+                              >
+                                <span className="type-label">{activeRoomTypes[fi]}</span>
+                                {isThisEditing ? (
                                   <input
-                                    className="cell-input"
+                                    className="type-input"
                                     type="number"
                                     min="0"
-                                    placeholder={tLabel}
-                                    defaultValue={vals[fi]}
-                                    autoFocus={fi === 0}
-                                    id={`${row}-${i}-${fi}`}
+                                    value={cellValue}
+                                    autoFocus
+                                    onChange={(e) => setCellValue(e.target.value)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onBlur={() => {
+                                      saveField(dateKey, { [f]: parseInt(cellValue) || 0 });
+                                      setEditingCell(null);
+                                    }}
                                     onKeyDown={(e) => {
-                                      if ((e.key === "Enter" || e.key === "Tab") && !isLast) {
-                                        document.getElementById(`${row}-${i}-${fi + 1}`)?.focus();
+                                      if (e.key === "Enter") {
+                                        saveField(dateKey, { [f]: parseInt(cellValue) || 0 });
+                                        setEditingCell(null);
                                       }
                                       if (e.key === "Escape") setEditingCell(null);
                                     }}
-                                    onBlur={isLast ? () => {
-                                      const data = {};
-                                      fields.forEach((fk, idx) => {
-                                        data[fk] = parseInt(document.getElementById(`${row}-${i}-${idx}`)?.value) || 0;
-                                      });
-                                      saveField(dateKey, data);
-                                      setEditingCell(null);
-                                    } : undefined}
                                   />
-                                  {!isLast && <span className="cell-split-sep">/</span>}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        ) : (
-                          <span className="cell-total-split">
-                            {fields.map((f, fi) => (
-                              <span key={f}>
-                                {vals[fi]}<span className="split-sub">{activeRoomTypes[fi]}</span>
-                                {fi < fields.length - 1 && <>&nbsp;+&nbsp;</>}
-                              </span>
-                            ))}
-                          </span>
-                        )}
+                                ) : (
+                                  <span className="type-value">{vals[fi]}</span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </td>
                     );
                   })}

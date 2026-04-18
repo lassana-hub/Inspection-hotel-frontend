@@ -1,25 +1,27 @@
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px 16px;
+}
+
+.main-content > * {
   max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (min-width: 768px) {
-  .main-content {
-    padding: 32px 24px;
-  }
+  .main-content { padding: 32px 24px; }
 }
 
 @media (min-width: 1024px) {
-  .main-content {
-    padding: 40px 32px;
-  }
+  .main-content { padding: 40px 32px; }
 }
