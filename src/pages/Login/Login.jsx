@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
-import laRolseLogo from '../../assets/la-rolse-nettoyage-logo.png'
-import './Login.css'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import laRolseLogo from "../../assets/la-rolse-nettoyage-logo.png";
+import "./Login.css";
 
 export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
-      const user = await login(form.email, form.password)
-      if (user.role === 'gouvernant' && user.hotel?._id) {
-        navigate(`/hotels/${user.hotel._id}`)
+      const user = await login(form.email, form.password);
+      if (user.role === "gouvernant" && user.hotel?._id) {
+        navigate(`/hotels/${user.hotel._id}`);
       } else {
-        navigate('/')
+        navigate("/");
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Erreur de connexion.')
+      setError(err.response?.data?.error || "Erreur de connexion.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="auth-page">
@@ -36,9 +36,13 @@ export default function Login() {
           <span className="auth-logo">🏨</span>
           <h1>Connexion</h1>
           <p>Bienvenue sur Inspection Hôtelière</p>
-          <img src={laRolseLogo} alt="La Rolse Nettoyage" className="auth-brand-logo" />
+          <img
+            src={laRolseLogo}
+            alt="La Rolse Nettoyage"
+            className="auth-brand-logo"
+          />
         </div>
-
+        .
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="auth-error">{error}</div>}
 
@@ -67,15 +71,18 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? 'Connexion en cours...' : 'Se connecter'}
+          <button
+            type="submit"
+            className="btn btn-primary btn-block"
+            disabled={loading}
+          >
+            {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
-
         <p className="auth-footer">
           Pas encore de compte ? <Link to="/signup">S'inscrire</Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
